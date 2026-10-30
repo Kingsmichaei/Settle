@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quality:
+    name: Lint and type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - run: ruff check src tests
+      - run: ruff format --check src tests
+      - run: mypy
+
+  test:
+    name: Tests (${{ matrix.database }}, Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.13"]
+        database: [sqlite, postgres]
+    services:
+      # A free Postgres for CI only; nothing to install on your own machine.
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: settle
+          POSTGRES_PASSWORD: settle
+          POSTGRES_DB: settle_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U settle"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      SETTLE_TEST_DATABASE_URL: ${{ matrix.database == 'postgres' && 'postgresql+psycopg://settle:settle@localhost:5432/settle_test' || '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: pip install -e ".[dev,postgres]"
+      - run: pytest
+      - run: settle demo
+      - run: settle eval-disputes
+
+  web:
+    name: Frontend build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run build
