@@ -1,0 +1,84 @@
+[
+  {
+    "name": "no hot water, host silent",
+    "reason": "There was no hot water for the whole 4-night stay.",
+    "claim_minor": 50000, "nights": 4, "total_minor": 50000,
+    "evidence": [
+      {"party": "guest", "kind": "photo", "content": "Boiler control panel showing error code E9, timestamped on day 1", "url": "https://example.com/e9.jpg"},
+      {"party": "guest", "kind": "statement", "content": "I messaged the host on day 1 and day 2 and got no reply. We showered at a gym."}
+    ],
+    "expected_min": 25000, "expected_max": 50000
+  },
+  {
+    "name": "unsupported cleanliness complaint",
+    "reason": "The apartment was dirty.",
+    "claim_minor": 20000, "nights": 4, "total_minor": 50000,
+    "evidence": [
+      {"party": "host", "kind": "photo", "content": "Cleaner's checklist photos of every room, taken 2 hours before check-in, all spotless", "url": "https://example.com/clean.jpg"}
+    ],
+    "expected_min": 0, "expected_max": 5000
+  },
+  {
+    "name": "advertised pool closed, host confirms",
+    "reason": "The listing advertises a pool but it was closed for our whole stay.",
+    "claim_minor": 20000, "nights": 4, "total_minor": 50000,
+    "evidence": [
+      {"party": "guest", "kind": "photo", "content": "Pool covered with a 'closed for repairs' sign", "url": "https://example.com/pool.jpg"},
+      {"party": "guest", "kind": "statement", "content": "The pool was the main reason we chose this place."},
+      {"party": "host", "kind": "statement", "content": "Sorry, the pump broke the day before they arrived and I forgot to update the listing."}
+    ],
+    "expected_min": 10000, "expected_max": 20000
+  },
+  {
+    "name": "locked out first night, instructions were sent",
+    "reason": "We could not get in on the first night and paid for a hotel.",
+    "claim_minor": 12500, "nights": 4, "total_minor": 50000,
+    "evidence": [
+      {"party": "guest", "kind": "statement", "content": "The key box code didn't work. We arrived at 23:00 and the host didn't answer."},
+      {"party": "guest", "kind": "photo", "content": "Hotel receipt for that night, EUR 140", "url": "https://example.com/hotel.jpg"},
+      {"party": "host", "kind": "photo", "content": "Screenshot of check-in instructions sent 2 days earlier, with the key box code and a note that the code changes at 22:00", "url": "https://example.com/instructions.jpg"}
+    ],
+    "expected_min": 4000, "expected_max": 12500
+  },
+  {
+    "name": "street noise disclosed in house rules",
+    "reason": "Too noisy at night to sleep.",
+    "claim_minor": 25000, "nights": 4, "total_minor": 50000,
+    "evidence": [
+      {"party": "guest", "kind": "statement", "content": "Bars on the street were loud until 2am every night."},
+      {"party": "host", "kind": "statement", "content": "The listing and house rules both say the flat is above a busy nightlife street and earplugs are provided."}
+    ],
+    "expected_min": 0, "expected_max": 5000
+  },
+  {
+    "name": "bed bugs, host denies",
+    "reason": "Bed bugs in the main bedroom.",
+    "claim_minor": 50000, "nights": 4, "total_minor": 50000,
+    "evidence": [
+      {"party": "guest", "kind": "photo", "content": "Close-up of insects on the mattress seam, consistent with bed bugs", "url": "https://example.com/bugs.jpg"},
+      {"party": "guest", "kind": "photo", "content": "Bite marks on an arm the next morning", "url": "https://example.com/bites.jpg"},
+      {"party": "host", "kind": "statement", "content": "We have never had bed bugs."}
+    ],
+    "expected_min": 40000, "expected_max": 50000
+  },
+  {
+    "name": "host double-booked the flat",
+    "reason": "On arrival someone else was staying in the apartment.",
+    "claim_minor": 50000, "nights": 4, "total_minor": 50000,
+    "evidence": [
+      {"party": "guest", "kind": "statement", "content": "Another family was in the flat and had a booking from a different site."},
+      {"party": "host", "kind": "statement", "content": "My calendar didn't sync with the other site. I'm very sorry; the guest should get everything back."}
+    ],
+    "expected_min": 50000, "expected_max": 50000
+  },
+  {
+    "name": "slow wifi, speed test shows fine",
+    "reason": "The wifi was too slow to work remotely.",
+    "claim_minor": 5000, "nights": 4, "total_minor": 50000,
+    "evidence": [
+      {"party": "guest", "kind": "statement", "content": "Video calls kept dropping."},
+      {"party": "host", "kind": "photo", "content": "Speed test from the router during the stay: 210 Mbps down, 40 up", "url": "https://example.com/speed.jpg"}
+    ],
+    "expected_min": 0, "expected_max": 2500
+  }
+]
