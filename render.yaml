@@ -1,0 +1,55 @@
+# Render blueprint: one web service (API + built frontend + embedded worker) and Postgres.
+# Free-tier friendly. At scale, set SETTLE_EMBEDDED_WORKER=false and add a worker service
+# running `python -m settle.workers` (see the commented block below).
+databases:
+  - name: settle-db
+    plan: free
+    databaseName: settle
+    user: settle
+
+services:
+  - type: web
+    name: settle
+    runtime: python
+    plan: free
+    buildCommand: >
+      pip install ".[postgres]" &&
+      cd web && npm ci && npm run build
+    startCommand: settle migrate && uvicorn settle.api.app:create_app --factory --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: SETTLE_ENVIRONMENT
+        value: production
+      - key: SETTLE_DATABASE_URL
+        fromDatabase:
+          name: settle-db
+          property: connectionString
+      - key: SETTLE_JWT_SECRET
+        generateValue: true
+      - key: SETTLE_EMBEDDED_WORKER
+        value: "true"
+      - key: SETTLE_PAYMENT_PROVIDER
+        value: paypal
+      - key: SETTLE_PAYPAL_CLIENT_ID
+        sync: false
+      - key: SETTLE_PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: SETTLE_PAYPAL_WEBHOOK_ID
+        sync: false
+      - key: SETTLE_PUBLIC_BASE_URL
+        sync: false # e.g. https://settle.onrender.com
+      - key: SETTLE_CORS_ORIGINS
+        sync: false # e.g. ["https://settle.onrender.com"]
+      - key: SETTLE_AI_PROVIDER
+        value: gemini
+      - key: SETTLE_GEMINI_API_KEY
+        sync: false
+
+  # - type: worker
+  #   name: settle-worker
+  #   runtime: python
+  #   buildCommand: pip install ".[postgres]"
+  #   startCommand: python -m settle.workers
+  #   envVars: (same as above, with SETTLE_EMBEDDED_WORKER=false on the web service)
